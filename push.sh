@@ -14,9 +14,8 @@ commit_website_files() {
 }
 
 upload_files() {
-  rev=$(git rev-parse --short HEAD)
   git remote add origin https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git > /dev/null 2>&1
-  git push --quiet --set-upstream origin ${BRANCH}
+  git push --quiet --set-upstream origin HEAD:${BRANCH}
 }
 
 setup_git

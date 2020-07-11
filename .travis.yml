@@ -38,8 +38,8 @@ before_script:
 
 # Checks
 script:
-  - basex xml/test.xq > xml/result.xml
-  - textql -output-file csv/result.csv -header -sql "id" csv/some.csv
+  - basex xml/test.xq > xml/result/result.xml
+  - textql -output-file csv/result/result.csv -header -sql "id" csv/some.csv
 
 
 # Generate Views (filter unknown)
