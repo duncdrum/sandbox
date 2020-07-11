@@ -24,6 +24,7 @@ jobs:
     - stage: "Tests"
       name: "Unit Tests"
     - stage: deploy
+      if: branch = master
       name: "Push generated to GH"
       after_success:
         - ./push.sh

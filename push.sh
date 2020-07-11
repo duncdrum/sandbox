@@ -1,6 +1,5 @@
 #!/bin/sh
 # https://www.vinaygopinath.me/blog/tech/commit-to-master-branch-on-github-using-travis-ci/
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 setup_git() {
   git config --global user.email "travis@travis-ci.org"
@@ -8,15 +7,14 @@ setup_git() {
 }
 
 commit_files() {
-  BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  git checkout shell-push
+  git checkout master
   git add ./*/result/ *.*
   git commit --message "[skip ci] Travis build: $TRAVIS_BUILD_NUMBER"
 }
 
 upload_files() {
   git remote add new-origin https://duncdrum:${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git > /dev/null 2>&1
-  git push new-origin shell-push --quiet
+  git push new-origin master --quiet > /dev/null 2>&1
 }
 
 setup_git
