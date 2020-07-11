@@ -17,7 +17,7 @@ addons:
       - basex
 
 env:
-  - BRANCH=bash -c 'git symbolic-ref --short HEAD'
+  - BRANCH=$(git symbolic-ref --short HEAD)
 
 notifications:
   email: false
@@ -29,10 +29,11 @@ jobs:
     - stage: deploy
       name: "Push generated to GH"
       after_success:
-        - git checkout
+        - git checkout -b ${BRANCH}
         - git add ./*/result *
-        - git commit --message "'Travis build:' ${TRAVIS_BUILD_NUMBER}"
-        - git push --quiet
+        - git commit --message "'[skip cp] Travis build:' ${TRAVIS_BUILD_NUMBER}"
+        - git remote add origin https://github.com/${TRAVIS_REPO_SLUG}.git
+        - git push --quiet origin HEAD:${BRANCH}
 install:
   # - pip install goodtables csvkit
 
