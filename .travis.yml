@@ -1,0 +1,38 @@
+language: python
+python:
+  - "3.7"
+
+os: linux
+dist: bionic
+
+# miller on ubuntu bionic is 5.3 we need 5.4 or higher
+addons:
+  apt:
+    packages:
+      - miller
+      - bats
+      - textql
+      - libxml2-utils
+      - jing
+      - basex
+
+notifications:
+  email: false
+
+
+install:
+  - pip install goodtables csvkit
+
+before_script:
+  - mlr --version
+  - textql --version
+
+# Checks
+script:
+  - basex xml/test.xq > xml/result.xml
+  - textql -output-file csv/result.csv -header -sql "id" csv/some.csv
+
+
+# Generate Views (filter unknown)
+after_success:
+  # - textql -output-header -output-file csv/views/view01a_txt-titles.csv -header -sql "select distinct a.act_id, a.act_object, ps.title from Act a, PrimarySource ps inner join PrimarySource on a.act_object = ps.prim_source_id  where ps.title_lang = a.id_lang and a.act_object!='W0414'" csv/data/
