@@ -26,7 +26,7 @@ jobs:
     - stage: deploy
       name: "Push generated to GH"
       after_success:
-        - push.sh
+        - ./push.sh
 
 install:
   - pip install goodtables csvkit
