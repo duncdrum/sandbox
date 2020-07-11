@@ -19,18 +19,31 @@ addons:
 notifications:
   email: false
 
-
+jobs:
+  include:
+    - stage: "Tests"
+      name: "Unit Tests"
+    - stage: deploy
+      name: "Push generated to GH"
+      after_success:
+        - git checkout 
+        - git add ./*/result *
+        - git commit --message "'Travis build:' ${TRAVIS_BUILD_NUMBER}"
+        - git push --quiet
 install:
   - pip install goodtables csvkit
 
 before_script:
   - mlr --version
   - textql --version
+  - git config --global user.email "travis@travis-ci.com"
+  - git config --global user.name "Travis CI"
 
 # Checks
 script:
-  - basex xml/test.xq > xml/result.xml
-  - textql -output-file csv/result.csv -header -sql "id" csv/some.csv
+  - bats -version
+  - basex xml/test.xq > xml/result/result.xml
+  - textql -output-file csv/result/result.csv -header -sql "id" csv/some.csv
 
 
 # Generate Views (filter unknown)
