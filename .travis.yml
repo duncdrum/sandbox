@@ -16,6 +16,9 @@ addons:
       - jing
       - basex
 
+env:
+  - BRANCH=bash -c 'git symbolic-ref --short HEAD'
+
 notifications:
   email: false
 
@@ -26,12 +29,12 @@ jobs:
     - stage: deploy
       name: "Push generated to GH"
       after_success:
-        - git checkout 
+        - git checkout
         - git add ./*/result *
         - git commit --message "'Travis build:' ${TRAVIS_BUILD_NUMBER}"
         - git push --quiet
 install:
-  - pip install goodtables csvkit
+  # - pip install goodtables csvkit
 
 before_script:
   - mlr --version
@@ -44,6 +47,7 @@ script:
   - bats -version
   - basex xml/test.xq > xml/result/result.xml
   - textql -output-file csv/result/result.csv -header -sql "id" csv/some.csv
+  - echo ${BRANCH}
 
 
 # Generate Views (filter unknown)
