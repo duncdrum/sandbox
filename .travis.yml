@@ -19,9 +19,19 @@ addons:
 notifications:
   email: false
 
+jobs:
+  include:
+    - stage: "Tests"
+      name: "Unit Tests"
+    - stage: deploy
+      if: branch = master
+      name: "Push generated to GH"
+      after_success:
+        - ./push.sh
 
 install:
   - pip install goodtables csvkit
+  - chmod +x push.sh
 
 before_script:
   - mlr --version
@@ -29,8 +39,8 @@ before_script:
 
 # Checks
 script:
-  - basex xml/test.xq > xml/result.xml
-  - textql -output-file csv/result.csv -header -sql "id" csv/some.csv
+  - basex xml/test.xq > xml/result/result.xml
+  - textql -output-file csv/result/result.csv -header -sql "id" csv/some.csv
 
 
 # Generate Views (filter unknown)
